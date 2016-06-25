@@ -29,7 +29,7 @@ and using ``pip``. e.g.
 
 .. code::
 
-  $ git clone https://github.com/dirlog.git
+  $ git clone https://github.com/ninjaaron/dirlog.git
   $ sudo pip install dirlog
 
 Or, perhaps you'll prefer to install in your user directory (in which
