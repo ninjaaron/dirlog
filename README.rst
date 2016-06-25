@@ -51,7 +51,7 @@ will be a site-specific version of this:
 
 If you run a non-POSIX shell (huge mistake), like fish or tcsh, you'll
 need something else. Because I assume (perhaps wrongly) that most people
-using fish don't actually know how to write anything complex in fish,
+using fish don't actually know how to write anything useful in fish,
 I'll do it for you:
 
 .. code:: sh
@@ -64,6 +64,9 @@ I'll do it for you:
     end
   end
 
-On the other hand, because I assume that anyone using ``tcsh`` actually
+*(fish is actually a better scripting language than POSIX in some ways,
+but, you know I sometimes like interoperability.)*
+
+On the other hand, because I assume that anyone using tcsh actually
 knows how to write scripts for it (as, indeed, I do not), I leave it to
 you to figure it out.
