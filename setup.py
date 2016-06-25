@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='dirlog',
-    version='0.0.0',
+    version='0.0.1',
     description='keep a log of directories you visit to get back fast',
     long_description=open('README.rst').read(),
     url='https://github.com/ninjaaron/dirlog',
