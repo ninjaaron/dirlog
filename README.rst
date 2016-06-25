@@ -94,8 +94,8 @@ function that you can with ``cd``. (Some version of ``cd`` have some
 extra flags. ``c`` has none.) However, whenever you use ``c``, it will
 remember the complete path of the directory you move to. To return to
 that directory, you can simply type the first part of the name of the
-directory, and it will take you back to the last directory the beginning
-of the name of which matches the hint you give.
+directory, and it will take you back to the last directory where the
+beginning of the name of matches the hint you give.
 
 .. code:: sh
 
