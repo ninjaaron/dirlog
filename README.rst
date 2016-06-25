@@ -1,5 +1,8 @@
 dirlog
 ======
+
+.. contents::
+
 The tradition of our unix forefathers teaches us that the command line
 is the most efficient way to do any task on a unix system. This is
 frequently the case. However, there are a few tasks which are more
@@ -54,7 +57,7 @@ need something else. Because I assume (perhaps wrongly) that most people
 using fish don't actually know how to write anything useful in fish,
 I'll do it for you:
 
-.. code:: sh
+.. code::
 
   function c
     set dir (python /path/to/dirlog.py $argv)
@@ -64,9 +67,16 @@ I'll do it for you:
     end
   end
 
-*(fish is actually a better scripting language than POSIX in some ways,
-but, you know I sometimes like interoperability.)*
+*(fish is actually a better scripting language than POSIX in many ways,
+but, you know, I kind of like interoperability.)*
 
-On the other hand, because I assume that anyone using tcsh actually
-knows how to write scripts for it (as, indeed, I do not), I leave it to
-you to figure it out.
+In fish, you can just enter this at the command line and then use
+``funcsave c`` to make it permanent. 
+
+Because I assume that anyone using tcsh actually knows how to write
+scripts for it (as, indeed, I do not), I leave it to you to figure it
+out.
+
+Whichever horrible, non-POSIX shell you use, you'll need to modify the
+``/path/to/dirlog.py`` to whatever it says when you run ``dirlog``. It
+will be site-specific.
