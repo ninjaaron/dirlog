@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 from __future__ import print_function
-import os, sys
+import os, sys, shlex
 import subprocess as sp
 import sqlite3
 
@@ -29,16 +29,17 @@ c() {
 If you use fish, tcsh or any other non-POSIX shells (God have
 mercy on your soul), you will need to modify this slightly. Then,
 use `c` as you would the `cd` command. You may wish to ommit the
-line with `ls`. I find it convinient.
+`&& ls`. I find it convinient.
 
-dirlog also provides the `dl` command to help you wrap other
-command in a way  that benefits from directory history. See
+dirlog also provides the `dlog` command to help you wrap other
+commands in a way  that benefits from directory history. See
 http://github.com/ninjaaron/dirlog for more details.\
 ''' % (__file__))
 
 
 
-def getdir(hint, hist=1):
+def getpath(hint, hist=1):
+    hist = int(hist)
     dbex('SELECT path FROM dirs WHERE name LIKE ? ORDER BY time DESC',
          (hint + '%',))
     try:
@@ -46,30 +47,51 @@ def getdir(hint, hist=1):
     except (TypeError, IndexError):
         print('no matching directory in history', file=sys.stderr)
         exit(1)
-    dbex('UPDATE dirs SET time = datetime("now") WHERE path = ?', (match,))
     return match
 
 
 def wrap():
-    hint, _, name = sys.argv.pop().partition('/')
-    path = getdir(hint) + _ + name
-    sp.call(sys.argv[1:] + [path])
+    args = sys.argv[1:]
+    token = 0
+
+
+    def unpack(hint):
+        hint, slash, name = hint.partition('/')
+        hint, _, hist = hint.partition('@')
+        hist = hist if hist else 1
+        return getpath(hint, hist) + slash + name
+
+    if len(args) == 1:
+        print(unpack(args[0]))
+        exit()
+
+    for index, arg in enumerate(args):
+        if arg.startswith('@'):
+            token = 1
+            args[index] = unpack(arg[1:])
+
+    if not token:
+        args[-1] = unpack(args[-1])
+
+    print(*(shlex.quote(i) for i in args), file=sys.stderr)
+    sp.call(args)
 
 
 def main():
     directory = sys.argv[1] if sys.argv[1:] else ''
-    hist = int(sys.argv[2]) if sys.argv[2:] else 1
+    hist = sys.argv[2] if sys.argv[2:] else 1
     if not directory:
         print(HOME)
         exit()
     if not os.path.isdir(directory):
-        path = getdir(directory, hist)
+        path = getpath(directory, hist)
+        dbex('UPDATE dirs SET time = datetime("now") WHERE path = ?', (path,))
     else:
-        path, name = os.path.abspath(directory), os.path.basename(directory)
+        path = os.path.abspath(directory)
         dbex('INSERT OR REPLACE INTO dirs VALUES(?, ?, datetime("now"))',
-             (path, name))
-    print(path)
+             (path, os.path.basename(directory)))
     db.commit()
+    print(path)
 
 
 if __name__ == '__main__':

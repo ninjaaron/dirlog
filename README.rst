@@ -40,6 +40,8 @@ user's python stuff is).
 
   $ pip install --user dirlog
 
+Alternatively, There is an AUR package.
+
 After that, run the the ``dirlog`` command, which will give you the
 function you need to get ``dirlog`` and ``cd`` to work together. It
 will be a site-specific version of this:
@@ -49,8 +51,7 @@ will be a site-specific version of this:
   c() {
     dir="$(python /path/to/dirlog.py "$@")"
     if [ "$dir" != "" ]; then
-      cd "$dir"
-      ls
+      cd "$dir" && ls
     fi
   }
 
@@ -64,8 +65,7 @@ I'll do it for you:
   function c
     set dir (python /path/to/dirlog.py $argv)
     if [ $dir != "" ]
-      cd $dir
-      ls
+      cd $dir and ls
     end
   end
 
@@ -112,21 +112,18 @@ The more directories you visit, the more will be stored in your history.
 Makes it quick to get around.
 
 Now, what if you have to directories with the same name, or similar for
-the first few characters? It takes you to the the matching directory
+the first few characters? It takes you to the matching directory
 that was most recently visited. If you want to go back to an earlier
-directory that matches, you may use numbers to indicate how far back it
+directory that match, you may use numbers to indicate how far back it
 is on the list. ``2`` is the match before last, ``3`` the one before
 that, etc.
-
-(this example assumes ``~/src/stupid-project`` is already in the
-database)
 
 .. code:: sh
 
   ~/src/stupid-project$ c ~/Documents/stupid-lists
   amimals-that-smell  people-who-smell  goverment-agencies-that-smell
   ~/Documents/stupid-lists$ c stu
-  amimals-that-smell  people-who-smell  goverment-agencies-which-smell
+  amimals-that-smell  people-who-smell  goverment-agencies-that-smell
   ~/Documents/stupid-lists$ # takes us back to this directory
   ~/Documents/stupid-lists$ # because it is most recent match
   ~/Documents/stupid-lists$ c stu 2
@@ -137,35 +134,76 @@ This is really fairly trivial, but I have found it to be extremely
 handy, if I do say so myself. I use it much more frequently that any
 other, eh, "software," I've written. The history is stored in an
 independent sqlite database, so it is updated across all shell sessions
-simultaniously.
+simultaneously.
 
-``dl`` command wrapper
-^^^^^^^^^^^^^^^^^^^^^^
-It recently occured to me that it might be useful the have this
-directory  history mechanism available to other commands. ``dl`` (for
-"dirlog") is a very simple, not very flexible way to do this. It may
-grow in sophistication later. or not. You simply put the ``dl`` command
-in front of the command you wish to run, and it will expand the last
-argument to the last matching directory you visited. At present it
-**only** works on the last argument in the command, and it does not
-support earlier directories that match the same hint with the number
-mechanism of the ``c`` function. This may change in the future. or not.
+``dlog`` command wrapper
+^^^^^^^^^^^^^^^^^^^^^^^^
+It recently occurred to me that it might be useful the have this
+directory  history mechanism available to other commands. ``dlog`` is a
+simple way to do this. Put the ``dlog`` command in front of the command
+you wish to run, and it will expand the last argument to the last
+matching directory you visited.
 
 .. code:: sh
 
-  ~/Documents/boring-work$ dl ln -s data.csv stu
-  ~/Documents/boring-work$ # data.csv has been linked to ~/src/stupid-project
+  ~/Documents/boring-work$ dlog ln -sr data.csv stu
+  ln -sr data.cvs /home/luser/src/stupid-project
   ~/Documents/boring-work$ c
   Downloads  Documents  Music  Pictures  junk.txt  pr0n  src
-  ~$ dl mv junk.txt bo
-  ~$ # junk.txt has been moved to ~/Documents/boring-work
+  ~$ dlog mv junk.txt bo
+  mv junk.txt /home/luser/Documents/boring-work
+  ~$
 
-Also, you can add a subpath, if you wish.
+You may add a subpath, if you wish. No globbing yet :(
 
 .. code:: sh
 
-  ~$ dl cp -R src bo/boring-code
-  ~$ # the ~/src directory has been copied to ~/Documents/boring-work/boring-code
+  ~$ dlog cp -R src bo/boring-code
+  cp -R src /home/luser/Documents/boring-work/boring-code
+  ~$
 
-I guess that's about it. Other commands may be added as I think of more
-things for which a directory history may be useful.
+As you see, dlog will echo back the command it executes to stderr.
+
+You may also access directories further back in the history, using the
+``@`` symbol (this symbol was chosen because it is not used by any of
+the popular shells for globbing, as far as I know).
+
+.. code:: sh
+
+  ~$ dlog ls st@2
+  ls /home/luser/Documents/stupid-lists
+  amimals-that-smell  people-who-smell  goverment-agencies-that-smell
+  ~$
+
+History and subpaths can be combined, like this:
+``st@2/animals-that-smell``.
+
+If you wish to use any other argument than the last one for directory
+expansion, it must be prefixed with ``@``.
+
+.. code:: sh
+
+  ~$ dlog cp @Mr@2/egg.mp3 .
+  cp '/home/luser/Music/Mr. Bungle/Mr. Bungle/egg.mp3' .
+  ~$
+
+If you have any arguments prefixed in this way, the final argument will
+no longer automatically be expanded. However, you can prefix as many
+arguments as you like with ``@`` in a single command 
+
+.. code:: sh
+
+  ~$ dlog true @st @bor
+  true /home/luser/src/stupid-project /home/luser/Documents/boring-work
+  ~$
+
+If ``dlog`` is given only one argument, it will simply print the name of
+the matching directory to stdout, and not try to execute a command.
+
+.. code:: sh
+
+  ~$ dlog Mr
+  /home/luser/Music/Mr. Bungle
+  ~$
+
+That's about it.
