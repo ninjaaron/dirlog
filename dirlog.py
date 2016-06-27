@@ -89,7 +89,7 @@ def main():
     else:
         path = os.path.abspath(directory)
         dbex('INSERT OR REPLACE INTO dirs VALUES(?, ?, datetime("now"))',
-             (path, os.path.basename(directory)))
+             (path, os.path.basename(path)))
     db.commit()
     print(path)
 
