@@ -93,6 +93,10 @@ def main():
     utility designed to be wrapped in a shell function with `cd` in such a way
     that tracks the directories you visit and need only track the first few
     letters of the basename to return. Read the docs for more information.
+
+    Instead of using the normal "console_scripts" method of entry, this
+    function is executed when running this source file as a script. It's a bit
+    faster that way.
     '''
     directory = sys.argv[1] if sys.argv[1:] else ''
     hist = sys.argv[2] if sys.argv[2:] else 1
