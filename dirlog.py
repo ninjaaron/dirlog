@@ -1,4 +1,7 @@
 #!/usr/bin/env python2
+'''
+History database for directories visited to make getting around easier.
+'''
 from __future__ import print_function
 import os, sys, shlex
 import subprocess as sp
@@ -14,6 +17,7 @@ dbex('CREATE TABLE IF NOT EXISTS '
 
 
 def install():
+    'Print install instructions'
     print('''\
 dirlog doesn't do much by itself. To use it, put a function like
 this in your ~/.bashrc (or whatever POSIX shell configuration
@@ -37,8 +41,12 @@ http://github.com/ninjaaron/dirlog for more details.\
 ''' % (__file__))
 
 
-
 def getpath(hint, hist=1):
+    """
+    return a path whose basename matches the given `hint`. Defaults to the most
+    recent item, though earlier matches may be specified with the `hist`
+    parameter.
+    """
     hist = int(hist)
     dbex('SELECT path FROM dirs WHERE name LIKE ? ORDER BY time DESC',
          (hint + '%',))
@@ -51,9 +59,12 @@ def getpath(hint, hist=1):
 
 
 def wrap():
+    '''
+    utility for wrapping commands to take advantage of the directory history.
+    Read the docs for further information.
+    '''
     args = sys.argv[1:]
     token = 0
-
 
     def unpack(hint):
         hint, slash, name = hint.partition('/')
@@ -78,6 +89,11 @@ def wrap():
 
 
 def main():
+    '''
+    utility designed to be wrapped in a shell function with `cd` in such a way
+    that tracks the directories you visit and need only track the first few
+    letters of the basename to return. Read the docs for more information.
+    '''
     directory = sys.argv[1] if sys.argv[1:] else ''
     hist = sys.argv[2] if sys.argv[2:] else 1
     if not directory:
