@@ -27,7 +27,7 @@ Installation
 You can install dirlog from PyPI with ``pip`` or by cloning this repo
 and using ``pip``. e.g.
 
-.. code::
+.. code:: sh
 
   $ git clone https://github.com/ninjaaron/dirlog.git
   $ sudo pip install dirlog
@@ -36,7 +36,7 @@ Or, perhaps you'll prefer to install in your user directory (in which
 case you must have ``~/.local/bin/`` in your path, or wherever your
 user's python stuff is).
 
-.. code::
+.. code:: sh
 
   $ pip install --user dirlog
 
@@ -206,4 +206,6 @@ the matching directory to stdout, and not try to execute a command.
   /home/luser/Music/Mr. Bungle
   ~$
 
-That's about it.
+Additionally, ``dlog -c`` will go through the database and clean out any
+directories that no longer exist. This probably won't be needed in most
+cases, but it's there.

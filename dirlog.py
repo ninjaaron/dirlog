@@ -55,7 +55,23 @@ def getpath(hint, hist=1):
     except (TypeError, IndexError):
         print('no matching directory in history', file=sys.stderr)
         exit(1)
+
+    if not os.path.isdir(match):
+        dbex('DELETE FROM dirs WHERE path = ?', (match,))
+        match = getpath(hint, hist)
+        db.commit()
+
     return match
+
+
+def cleanup():
+    'remove entrys for directories that no longer exist'
+    print('cleaning out paths which no longer exist...')
+    dbex('SELECT path FROM dirs')
+    for path in (i[0] for i in cur.fetchall()):
+        if not os.path.isdir(path):
+            print(path)
+            dbex('DELETE FROM dirs WHERE path = ?', (path,))
 
 
 def wrap():
@@ -73,7 +89,8 @@ def wrap():
         return getpath(hint, hist) + slash + name
 
     if len(args) == 1:
-        print(unpack(args[0]))
+        cleanup() if args[0] == '-c' else print(unpack(args[0]))
+        db.commit()
         exit()
 
     for index, arg in enumerate(args):
@@ -100,9 +117,11 @@ def main():
     '''
     directory = sys.argv[1] if sys.argv[1:] else ''
     hist = sys.argv[2] if sys.argv[2:] else 1
+
     if not directory:
         print(HOME)
         exit()
+
     if not os.path.isdir(directory):
         path = getpath(directory, hist)
         dbex('UPDATE dirs SET time = datetime("now") WHERE path = ?', (path,))
@@ -110,6 +129,7 @@ def main():
         path = os.path.abspath(directory)
         dbex('INSERT OR REPLACE INTO dirs VALUES(?, ?, datetime("now"))',
              (path, os.path.basename(path)))
+
     db.commit()
     print(path)
 
