@@ -3,6 +3,10 @@ dirlog
 
 .. contents::
 
+dirlog is a wrapper for `cd` that keeps a database of all the
+directories you visit, so you only have to type the first few letters of
+the basename to get back to them the next time.
+
 Ramblings
 ---------
 The tradition of our unix forefathers teaches us that the command line
@@ -57,8 +61,8 @@ will be a site-specific version of this:
 
 If you run a non-POSIX shell (huge mistake), like fish or tcsh, you'll
 need something else. Because I assume (perhaps wrongly) that most people
-using fish don't actually know how to write anything useful in fish,
-I'll do it for you:
+using fish don't know how to write anything useful in fish, I'll do it
+for you:
 
 .. code::
 
