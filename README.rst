@@ -65,7 +65,7 @@ I'll do it for you:
   function c
     set dir (python /path/to/dirlog.py $argv)
     if [ $dir != "" ]
-      cd $dir and ls
+      cd $dir; and ls
     end
   end
 
