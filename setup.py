@@ -1,4 +1,5 @@
-from setuptools import setup, find_packages
+from setuptools import setup
+import fastentrypoints
 
 setup(
     name='dirlog',
@@ -12,5 +13,6 @@ setup(
     classifiers=['Programming Language :: Python :: 3.5'],
     entry_points={'console_scripts': [
         'dirlog=dirlog:install',
-        'dlog=dirlog:wrap']},
+        'dlog=dirlog:wrap',
+        'dirlog-cd=dirlog:main']},
 )
