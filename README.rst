@@ -47,8 +47,7 @@ user's python stuff is).
 Alternatively, There is an AUR package.
 
 After that, run the the ``dirlog`` command, which will give you the
-function you need to get ``dirlog`` and ``cd`` to work together. It
-will be a site-specific version of this:
+function you need to get ``dirlog`` and ``cd`` to work together.
 
 .. code:: sh
 
