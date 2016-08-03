@@ -3,7 +3,7 @@ dirlog
 
 .. contents::
 
-dirlog is a wrapper for `cd` that keeps a database of all the
+dirlog is a wrapper for ``cd`` that keeps a database of all the
 directories you visit, so you only have to type the first few letters of
 the basename to get back to them the next time.
 
@@ -53,7 +53,7 @@ will be a site-specific version of this:
 .. code:: sh
 
   c() {
-    dir="$(python /path/to/dirlog.py "$@")"
+    dir="$(dirlog-cd "$@")"
     if [ "$dir" != "" ]; then
       cd "$dir" && ls
     fi
@@ -67,7 +67,7 @@ for you:
 .. code::
 
   function c
-    set dir (python /path/to/dirlog.py $argv)
+    set dir (dirlog-cd $argv)
     if [ $dir != "" ]
       cd $dir; and ls
     end
@@ -77,16 +77,14 @@ for you:
 but, you know, I kind of like interoperability.)*
 
 In fish, you can just enter this at the command line and then use
-``funcsave c`` to make it permanent. 
+``funcsave c`` to make it permanent.
 
 Because I assume that anyone using tcsh actually knows how to write
 scripts for it (as, indeed, I do not), I leave it to you to figure it
 out.
 
-Whichever horrible, non-POSIX shell you use, you'll need to modify the
-``/path/to/dirlog.py`` to whatever it says when you run ``dirlog``. It
-will be site-specific. Naturally, you may omit the ``ls`` command, if
-you wish. I find it handy.
+Naturally, you may omit the ``ls`` command, if you wish. I find it
+handy.
 
 Usage
 -----

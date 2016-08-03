@@ -24,7 +24,7 @@ this in your ~/.bashrc (or whatever POSIX shell configuration
 file).
 
 c() {
-  dir="$(python %s "$@")"
+  dir="$(dirlog-cd "$@")"
   if [ "$dir" != "" ]; then
     cd "$dir" && ls
   fi
@@ -38,7 +38,7 @@ use `c` as you would the `cd` command. You may wish to ommit the
 dirlog also provides the `dlog` command to help you wrap other
 commands in a way  that benefits from directory history. See
 http://github.com/ninjaaron/dirlog for more details.\
-''' % (__file__))
+''')
 
 
 def getpath(hint, hist=1):
@@ -105,7 +105,7 @@ def wrap():
     sp.call(args)
 
 
-def main():
+def main(dir=None):
     '''
     utility designed to be wrapped in a shell function with `cd` in such a way
     that tracks the directories you visit and need only track the first few
@@ -115,7 +115,7 @@ def main():
     function is executed when running this source file as a script. It's a bit
     faster that way.
     '''
-    directory = sys.argv[1] if sys.argv[1:] else ''
+    directory = dir if dir else sys.argv[1] if sys.argv[1:] else ''
     hist = sys.argv[2] if sys.argv[2:] else 1
 
     if not directory:
