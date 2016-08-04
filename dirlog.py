@@ -3,7 +3,7 @@
 History database for directories visited to make getting around easier.
 '''
 from __future__ import print_function
-import os, sys, shlex
+import os, sys, re
 import subprocess as sp
 import sqlite3
 
@@ -101,8 +101,23 @@ def wrap():
     if not token:
         args[-1] = unpack(args[-1])
 
-    print(*(shlex.quote(i) for i in args), file=sys.stderr)
+    print(*(quote(i) for i in args), file=sys.stderr)
     sp.call(args)
+
+
+# from shlex in python3
+_find_unsafe = re.compile(r'[^\w@%+=:,./-]').search
+
+def quote(s):
+    """Return a shell-escaped version of the string *s*."""
+    if not s:
+        return "''"
+    if _find_unsafe(s) is None:
+        return s
+
+    # use single quotes, and put single quotes into double quotes
+    # the string $'b is then quoted as '$'"'"'b'
+    return "'" + s.replace("'", "'\"'\"'") + "'"
 
 
 def main(dir=None):
