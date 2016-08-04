@@ -1,16 +1,17 @@
 from setuptools import setup
+
 try:
-    import fastentrypoints
-except ImportError:
-    print('"remotely importing" fastentrypoints from github')
     from urllib import request
-    fastep = request.urlopen('https://raw.githubusercontent.com/ninjaaron/fast-entry_points/master/fastentrypoints.py')
-    namespace = {}
-    exec(fastep.read(), namespace)
+except ImportError:
+    import urllib2 as request
+
+fastep = request.urlopen('https://raw.githubusercontent.com/ninjaaron/fast-entry_points/master/fastentrypoints.py')
+namespace = {}
+exec(fastep.read(), namespace)
 
 setup(
     name='dirlog',
-    version='0.2.5',
+    version='0.2.6',
     description='keep a log of directories you visit to get back fast',
     long_description=open('README.rst').read(),
     url='https://github.com/ninjaaron/dirlog',
