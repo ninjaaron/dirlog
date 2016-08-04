@@ -7,7 +7,7 @@ except ImportError:
         'https://raw.githubusercontent.com/ninjaaron/fast-entry_points/master/fastentrypoints.py'
         )
     namespace = {}
-    exec(fastep, namespace)
+    exec(fastep.read(), namespace)
 
 setup(
     name='dirlog',
