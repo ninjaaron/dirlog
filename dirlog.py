@@ -146,7 +146,56 @@ def get_and_update(directory=None, hist=1):
     return path
 
 
+class Trigger:
+    '''
+    lazy ways to supply function arguments, mostly for the interactive
+    prompt... he... I hope.
+    '''
+    def __init__(self, func):
+        self.func = func
+
+    def __repr__(self):
+        self.func()
+        return ''
+
+    def __truediv__(self, other):
+        return self.func(other)
+
+    def __getattr__(self, name):
+        return self.func(name)
+
+    def __call__(self, *args, **kwargs):
+        return self.func(*args, **kwargs)
+
+
+@Trigger
+def c(hint=None):
+    """
+    Python version of the `c` shell function for use in python shells. The
+    interface is a bit 'magical' thanks to the Trigger class.
+
+    >>> c # goes to home dir
+    Documents  Downloads  Movies (etc...)
+
+    >>> # prints and extra newline because this is a trick with __repr__
+    >>> c.Mo # assuming you have been there in the past...
+    'Lord of The Rings Trilogy' (etc...)
+    >>> # if you need to type a full path, use `/` operator and a string.
+    >>> c/'/etc/sshd'
+    (sshd config files...)
+    >>> # if you don't like all the magic, call with normal syntax:
+    >>> c('/etc/sshd')
+    """
+    os.chdir(dirlog.get_and_update(os.path.expanduser(hint)))
+    ls = sp.Popen(['ls', '--color=auto'])
+    ls.wait()
+
+
 def main():
+    '''
+    function called by `dirlog-cd`, to be wrapped with `cd` in a shell function
+    in ~/.bashrc or wherever.
+    '''
     directory = sys.argv[1] if sys.argv[1:] else ''
     hist = sys.argv[2] if sys.argv[2:] else 1
     print(get_and_update(directory, hist))
