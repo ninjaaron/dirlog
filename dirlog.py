@@ -120,7 +120,7 @@ def quote(s):
     return "'" + s.replace("'", "'\"'\"'") + "'"
 
 
-def main(dir=None):
+def get_and_update(directory=None, hist=1):
     '''
     utility designed to be wrapped in a shell function with `cd` in such a way
     that tracks the directories you visit and need only track the first few
@@ -130,9 +130,6 @@ def main(dir=None):
     function is executed when running this source file as a script. It's a bit
     faster that way.
     '''
-    directory = dir if dir else sys.argv[1] if sys.argv[1:] else ''
-    hist = sys.argv[2] if sys.argv[2:] else 1
-
     if not directory:
         print(HOME)
         exit()
@@ -146,7 +143,13 @@ def main(dir=None):
              (path, os.path.basename(path)))
 
     db.commit()
-    print(path)
+    return path
+
+
+def main():
+    directory = sys.argv[1] if sys.argv[1:] else ''
+    hist = sys.argv[2] if sys.argv[2:] else 1
+    print(get_and_update(directory, hist))
 
 
 if __name__ == '__main__':
