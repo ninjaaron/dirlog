@@ -44,7 +44,7 @@ user's python stuff is).
 
   $ pip install --user dirlog
 
-Alternatively, There is an AUR package.
+Alternatively, There is an AUR Arch Linux and derived distros.
 
 After that, run the the ``dirlog`` command, which will give you the
 function you need to get ``dirlog`` and ``cd`` to work together.
@@ -136,6 +136,31 @@ handy, if I do say so myself. I use it much more frequently that any
 other, eh, "software," I've written. The history is stored in an
 independent sqlite database, so it is updated across all shell sessions
 simultaneously.
+
+You may also ``from dirlog import c`` in a python shell to get a native
+implementation. The syntax is a bit "magical" for convenience in the
+shell. It's use is documented in the docstring. However, because it is
+rather magical, it breaks ``help()``. ("oops"), so I'll copy it here.
+
+.. code:: python
+
+  >>> c # goes to home dir
+  Documents  Downloads  Movies (etc...)
+
+  >>> # prints and extra newline because this is a trick with __repr__
+  >>> c.Mo # assuming you have been there in the past...
+  'Lord of The Rings Trilogy' (etc...)
+  >>> # if you need to type a full path, use `/` operator and a string.
+  >>> c/'/etc/sshd'
+  (sshd config files...)
+  >>> # if you don't like all the magic, call with normal syntax:
+  >>> c('/etc/sshd')
+
+Don't use this object in a script. Its __repr__ is a lie.. If you need
+dirlog functionality in a script (which you shouldn't...), use the
+``getpath()`` function, or ``get_and_update()`` These functions are
+non-magicall.
+
 
 ``dlog`` command wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^

@@ -54,7 +54,7 @@ def getpath(hint, hist=1):
         match = cur.fetchall()[hist-1][0]
     except (TypeError, IndexError):
         print('no matching directory in history', file=sys.stderr)
-        exit(1)
+        return
 
     if not os.path.isdir(match):
         dbex('DELETE FROM dirs WHERE path = ?', (match,))
@@ -131,8 +131,7 @@ def get_and_update(directory=None, hist=1):
     faster that way.
     '''
     if not directory:
-        print(HOME)
-        exit()
+        return(HOME)
 
     if not os.path.isdir(directory):
         path = getpath(directory, hist)
@@ -169,7 +168,7 @@ class Trigger:
 
 
 @Trigger
-def c(hint=None):
+def c(hint=''):
     """
     Python version of the `c` shell function for use in python shells. The
     interface is a bit 'magical' thanks to the Trigger class.
@@ -186,7 +185,7 @@ def c(hint=None):
     >>> # if you don't like all the magic, call with normal syntax:
     >>> c('/etc/sshd')
     """
-    os.chdir(dirlog.get_and_update(os.path.expanduser(hint)))
+    os.chdir(get_and_update(os.path.expanduser(hint)))
     ls = sp.Popen(['ls', '--color=auto'])
     ls.wait()
 
@@ -198,7 +197,8 @@ def main():
     '''
     directory = sys.argv[1] if sys.argv[1:] else ''
     hist = sys.argv[2] if sys.argv[2:] else 1
-    print(get_and_update(directory, hist))
+    directory = get_and_update(directory, hist)
+    print(directory) if directory else exit(1)
 
 
 if __name__ == '__main__':
