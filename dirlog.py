@@ -85,7 +85,7 @@ def wrap():
     def unpack(hint):
         hint, slash, name = hint.partition('/')
         hint, _, hist = hint.partition('@')
-        hist = hist if hist else 1
+        hist = hist or 1
         return getpath(hint, hist) + slash + name
 
     if len(args) == 1:
@@ -195,8 +195,8 @@ def main():
     function called by `dirlog-cd`, to be wrapped with `cd` in a shell function
     in ~/.bashrc or wherever.
     '''
-    directory = sys.argv[1] if sys.argv[1:] else ''
-    hist = sys.argv[2] if sys.argv[2:] else 1
+    directory = sys.argv[1] or ''
+    hist = sys.argv[2] or 1
     directory = get_and_update(directory, hist)
     print(directory) if directory else exit(1)
 
