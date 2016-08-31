@@ -2,10 +2,11 @@
 '''
 History database for directories visited to make getting around easier.
 '''
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 import os, sys, re
 import subprocess as sp
 import sqlite3
+import six
 
 HOME = os.environ['HOME']
 DBPATH = HOME + '/.cache/dirlog.db'
@@ -14,14 +15,15 @@ cur = db.cursor()
 dbex = cur.execute
 dbex('CREATE TABLE IF NOT EXISTS '
      'dirs(path TEXT PRIMARY KEY, name TEXT, time TEXT)')
+ENC = sys.getfilesystemencoding()
 
 
 def install():
     'Print install instructions'
     print('''\
-dirlog doesn't do much by itself. To use it, put a function like
-this in your ~/.bashrc (or whatever POSIX shell configuration
-file).
+# dirlog doesn't do much by itself. To use it, put a function like
+# this in your ~/.bashrc (or whatever POSIX shell configuration
+# file).
 
 c() {
   dir="$(dirlog-cd "$@")"
@@ -30,14 +32,14 @@ c() {
   fi
 }
 
-If you use fish, tcsh or any other non-POSIX shells (God have
-mercy on your soul), you will need to modify this slightly. Then,
-use `c` as you would the `cd` command. You may wish to ommit the
-`&& ls`. I find it convinient.
+# If you use fish, tcsh or any other non-POSIX shells (God have
+# mercy on your soul), you will need to modify this slightly. Then,
+# use `c` as you would the `cd` command. You may wish to ommit the
+# `&& ls`. I find it convinient.
 
-dirlog also provides the `dlog` command to help you wrap other
-commands in a way  that benefits from directory history. See
-http://github.com/ninjaaron/dirlog for more details.\
+# dirlog also provides the `dlog` command to help you wrap other
+# commands in a way  that benefits from directory history. See
+# http://github.com/ninjaaron/dirlog for more details.\
 ''')
 
 
@@ -117,7 +119,8 @@ def quote(s):
 
     # use single quotes, and put single quotes into double quotes
     # the string $'b is then quoted as '$'"'"'b'
-    return "'" + s.replace("'", "'\"'\"'") + "'"
+    flags = re.ASCII if six.PY3 else 0
+    return "'" + s.replace("'", "'\"'\"'", flags=flags) + "'"
 
 
 def get_and_update(directory=None, hist=1):
@@ -153,9 +156,8 @@ class Trigger:
     def __init__(self, func):
         self.func = func
 
-    def __repr__(self):
-        self.func()
-        return ''
+    def __neg__(self):
+        return self.func()
 
     def __truediv__(self, other):
         return self.func(other)
@@ -195,9 +197,12 @@ def main():
     function called by `dirlog-cd`, to be wrapped with `cd` in a shell function
     in ~/.bashrc or wherever.
     '''
-    directory = sys.argv[1] or ''
-    hist = sys.argv[2] or 1
+    args = sys.argv[1:]
+    directory = args[0] if args[0:] else ''
+    hist = args[1] if args[1:] else 1
     directory = get_and_update(directory, hist)
+    if six.PY2:
+        directory = directory.encode(ENC)
     print(directory) if directory else exit(1)
 
 
