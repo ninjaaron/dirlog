@@ -28,13 +28,14 @@ other way.
 
 Installation
 ------------
-You can install dirlog from PyPI with ``pip`` or by cloning this repo
-and using ``pip``. e.g.
+You can install dirlog from PyPI with ``pip3`` or by cloning this repo
+and using ``pip3``. e.g. (you can use ``pip2`` as well, but you may
+encounter some bugs.
 
 .. code:: sh
 
   $ git clone https://github.com/ninjaaron/dirlog.git
-  $ sudo pip install dirlog
+  $ sudo pip3 install dirlog
 
 Or, perhaps you'll prefer to install in your user directory (in which
 case you must have ``~/.local/bin/`` in your path, or wherever your
@@ -42,7 +43,7 @@ user's python stuff is).
 
 .. code:: sh
 
-  $ pip install --user dirlog
+  $ pip3 install --user dirlog
 
 Alternatively, There is an AUR Arch Linux and derived distros.
 
@@ -84,6 +85,30 @@ out.
 
 Naturally, you may omit the ``ls`` command, if you wish. I find it
 handy.
+
+Tip:
+  I tweak the above POSIX script slightly for quickly switching back and
+  forth betweeen two directories:
+
+  .. code:: sh
+
+    c() {
+      local dir=$(dirlog-cd "$@")
+      if [ "$dir" != "" ]; then
+        LAST="$PWD"
+        cd "$dir"&& ls
+      fi
+    }
+
+    b() {
+      c "$LAST"
+    }
+
+  ``local`` is not strictly POSIX, but it works in many shells, and then
+  I stick the previous directory in a global variable so I can get back
+  to it quickly. If you want some more sophisticated directory history,
+  I suppose it would be easy enough to use pushd and popd in a dirlog
+  wrapper.
 
 Usage
 -----
