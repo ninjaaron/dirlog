@@ -19,9 +19,9 @@ dbex('CREATE TABLE IF NOT EXISTS '
 def install():
     'Print install instructions'
     print('''\
-dirlog doesn't do much by itself. To use it, put a function like
-this in your ~/.bashrc (or whatever POSIX shell configuration
-file).
+# dirlog doesn't do much by itself. To use it, put a function like
+# this in your ~/.bashrc (or whatever POSIX shell configuration
+# file).
 
 c() {
   dir="$(dirlog-cd "$@")"
@@ -30,14 +30,14 @@ c() {
   fi
 }
 
-If you use fish, tcsh or any other non-POSIX shells (God have
-mercy on your soul), you will need to modify this slightly. Then,
-use `c` as you would the `cd` command. You may wish to ommit the
-`&& ls`. I find it convinient.
+# If you use fish, tcsh or any other non-POSIX shells (God have
+# mercy on your soul), you will need to modify this slightly. Then,
+# use `c` as you would the `cd` command. You may wish to ommit the
+# `&& ls`. I find it convinient.
 
-dirlog also provides the `dlog` command to help you wrap other
-commands in a way  that benefits from directory history. See
-http://github.com/ninjaaron/dirlog for more details.\
+# dirlog also provides the `dlog` command to help you wrap other
+# commands in a way  that benefits from directory history. See
+# http://github.com/ninjaaron/dirlog for more details.\
 ''')
 
 
@@ -125,10 +125,6 @@ def get_and_update(directory=None, hist=1):
     utility designed to be wrapped in a shell function with `cd` in such a way
     that tracks the directories you visit and need only track the first few
     letters of the basename to return. Read the docs for more information.
-
-    Instead of using the normal "console_scripts" method of entry, this
-    function is executed when running this source file as a script. It's a bit
-    faster that way.
     '''
     if not directory:
         return(HOME)
