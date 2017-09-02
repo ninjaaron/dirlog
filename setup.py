@@ -3,7 +3,7 @@ import fastentrypoints
 
 setup(
     name='dirlog',
-    version='1.0.1',
+    version='1.1.0',
     description='keep a log of directories you visit to get back fast',
     long_description=open('README.rst').read(),
     url='https://github.com/ninjaaron/dirlog',
