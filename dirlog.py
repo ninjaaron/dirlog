@@ -6,7 +6,29 @@ from __future__ import print_function
 import os, sys, re
 import subprocess as sp
 import sqlite3
+INSTALL_MESSAGE = '''\
+# dirlog doesn't do much by itself. To use it, put a function like
+# this in your ~/.bashrc (or whatever POSIX shell configuration
+# file).
 
+c() {
+  dir="$(dirlog-cd "$@")"
+  if [ "$dir" != "" ]; then
+    cd "$dir" && ls
+  fi
+}
+
+# If you use fish, tcsh or any other non-POSIX shells (God have
+# mercy on your soul), you will need to modify this slightly. Then,
+# use `c` as you would the `cd` command. You may wish to ommit the
+# `&& ls`. I find it convinient.
+
+# dirlog also provides the `dlog` command to help you wrap other
+# commands in a way  that benefits from directory history. See
+# http://github.com/ninjaaron/dirlog for more details.\
+
+# run dirlog -c to clean the cache if you wish.
+'''
 HOME = os.environ['HOME']
 DBPATH = HOME + '/.cache/dirlog.db'
 db = sqlite3.connect(DBPATH)
@@ -169,27 +191,7 @@ def install():
     if sys.argv and sys.argv[1] == '-c':
         print(*cleanup(), sep='\n')
     else:
-        print('''\
-# dirlog doesn't do much by itself. To use it, put a function like
-# this in your ~/.bashrc (or whatever POSIX shell configuration
-# file).
-
-c() {
-  dir="$(dirlog-cd "$@")"
-  if [ "$dir" != "" ]; then
-    cd "$dir" && ls
-  fi
-}
-
-# If you use fish, tcsh or any other non-POSIX shells (God have
-# mercy on your soul), you will need to modify this slightly. Then,
-# use `c` as you would the `cd` command. You may wish to ommit the
-# `&& ls`. I find it convinient.
-
-# dirlog also provides the `dlog` command to help you wrap other
-# commands in a way  that benefits from directory history. See
-# http://github.com/ninjaaron/dirlog for more details.\
-''')
+        print(INSTALL_MESSAGE)
 
 
 def main():

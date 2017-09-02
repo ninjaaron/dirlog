@@ -60,11 +60,9 @@ function you need to get ``dirlog`` and ``cd`` to work together.
   }
 
 If you run a non-POSIX shell (huge mistake), like fish or tcsh, you'll
-need something else. Because I assume (perhaps wrongly) that most people
-using fish don't know how to write anything useful in fish, I'll do it
-for you:
+need something else. Here's the fish version:
 
-.. code::
+.. code:: fish
 
   function c
     set dir (dirlog-cd $argv)
@@ -73,15 +71,10 @@ for you:
     end
   end
 
-*(fish is actually a better scripting language than POSIX in many ways,
-but, you know, I kind of like interoperability.)*
-
 In fish, you can just enter this at the command line and then use
 ``funcsave c`` to make it permanent.
 
-Because I assume that anyone using tcsh actually knows how to write
-scripts for it (as, indeed, I do not), I leave it to you to figure it
-out.
+I don't know tcsh, so I leave it to you to figure it out.
 
 Naturally, you may omit the ``ls`` command, if you wish. I find it
 handy.
@@ -249,14 +242,10 @@ arguments as you like with ``@`` in a single command
   ~$
 
 If ``dlog`` is given only one argument, it will simply print the name of
-the matching directory to stdout, and not try to execute a command.
+all matching directories to stdout, and not try to execute a command.
 
 .. code:: sh
 
   ~$ dlog Mr
   /home/luser/Music/Mr. Bungle
   ~$
-
-Additionally, ``dlog -c`` will go through the database and clean out any
-directories that no longer exist. This probably won't be needed in most
-cases, but it's there.
