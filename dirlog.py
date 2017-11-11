@@ -74,7 +74,9 @@ def getpaths(hint):
     return match
 
 
-def getpath(hint, hist=1):
+def getpath(hint, hist=None):
+    if not hist:
+        hist = 1
     hist = int(hist)
     match = getpaths(hint)[hist-1]
     if not os.path.isdir(match):
