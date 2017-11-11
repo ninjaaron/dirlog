@@ -172,7 +172,9 @@ def wrap():
 
     if len(args) == 1:
         try:
-            print(*getpaths(args[0]), sep='\n')
+            print(*('{:>2}  {}'.format(p[0]+1, p[1]) for p in
+                    enumerate(getpaths(args[0]))),
+                  sep='\n')
         except NotInHistory as e:
             print(e, file=sys.stderr)
         exit()
@@ -190,7 +192,7 @@ def wrap():
 
 def install():
     'Print install instructions'
-    if sys.argv and sys.argv[1] == '-c':
+    if sys.argv[1:] and sys.argv[1] == '-c':
         print(*cleanup(), sep='\n')
     else:
         print(INSTALL_MESSAGE)
