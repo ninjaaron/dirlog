@@ -30,7 +30,10 @@ c() {
 # run dirlog -c to clean the cache if you wish.
 '''
 HOME = os.environ['HOME']
-DBPATH = HOME + '/.cache/dirlog.db'
+CACHE = HOME + '/.cache'
+if not os.path.exists(CACHE):
+    os.mkdir(CACHE)
+DBPATH = CACHE + '/dirlog.db'
 db = sqlite3.connect(DBPATH)
 cur = db.cursor()
 dbex = cur.execute
